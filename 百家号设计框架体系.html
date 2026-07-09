@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>百家号设计框架体系</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; background: #f0f2f5; color: #1a1a1a; line-height: 1.6; }
+        .page-header { background: linear-gradient(135deg, #4E6EF2, #7B9CFF); color: white; padding: 60px 40px; text-align: center; }
+        .page-header h1 { font-size: 36px; font-weight: 700; margin-bottom: 12px; }
+        .page-header p { font-size: 16px; opacity: 0.9; max-width: 860px; margin: 0 auto; }
+        .page-header .stats { display: flex; justify-content: center; gap: 40px; margin-top: 30px; flex-wrap: wrap; }
+        .page-header .stat-item { text-align: center; min-width: 120px; }
+        .page-header .stat-num { font-size: 32px; font-weight: 700; }
+        .page-header .stat-label { font-size: 14px; opacity: 0.8; }
+        .container { max-width: 1400px; margin: 0 auto; padding: 40px 20px; }
+        .section-title { font-size: 24px; font-weight: 700; margin-bottom: 18px; padding-left: 12px; border-left: 4px solid #4E6EF2; }
+        .section-desc { color: #666; margin-bottom: 28px; font-size: 15px; }
+        .principle-box { background: #fff; border-radius: 14px; padding: 22px 24px; margin-bottom: 40px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); border-left: 4px solid #4E6EF2; }
+        .principle-box h3 { font-size: 17px; margin-bottom: 10px; }
+        .principle-box p { color: #666; font-size: 14px; }
+        .overview-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; margin-bottom: 60px; }
+        .overview-item { background: white; border-radius: 12px; padding: 20px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.04); transition: transform 0.2s; }
+        .overview-item:hover { transform: translateY(-2px); }
+        .overview-item .ov-badge { font-size: 12px; font-weight: 600; color: white; background: #4E6EF2; padding: 2px 8px; border-radius: 4px; display: inline-block; margin-bottom: 8px; }
+        .overview-item h4 { font-size: 15px; margin-bottom: 6px; }
+        .overview-item p { font-size: 12px; color: #888; min-height: 36px; }
+        .overview-item .ov-count { margin-top: 10px; font-size: 20px; font-weight: 700; color: #4E6EF2; }
+        .framework-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(640px, 1fr)); gap: 24px; margin-bottom: 60px; }
+        .framework-card { background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+        .framework-card-header { padding: 20px 24px; background: #fafbff; border-bottom: 1px solid #eef0f5; display: flex; align-items: center; gap: 12px; }
+        .framework-badge { background: #4E6EF2; color: white; padding: 4px 10px; border-radius: 6px; font-size: 13px; font-weight: 600; }
+        .framework-card-header h3 { font-size: 18px; flex: 1; }
+        .usage-count { font-size: 13px; color: #888; background: #f0f0f0; padding: 2px 8px; border-radius: 4px; }
+        .framework-card-body { padding: 24px; display: flex; gap: 24px; }
+        .layout-diagram { width: 280px; min-width: 280px; height: 200px; border: 2px solid #e8ecf3; border-radius: 8px; position: relative; overflow: hidden; background: #fafbfc; }
+        .ld-header { position: absolute; top: 0; left: 0; right: 0; height: 24px; background: #e8ecf3; display: flex; align-items: center; padding: 0 8px; font-size: 9px; color: #888; }
+        .ld-sidebar { position: absolute; top: 24px; left: 0; width: 50px; bottom: 0; background: #dfe4f0; display: flex; flex-direction: column; align-items: center; padding-top: 8px; gap: 4px; }
+        .ld-dot { width: 30px; height: 6px; background: #b8c4e0; border-radius: 3px; }
+        .ld-main { position: absolute; top: 24px; left: 50px; right: 0; bottom: 0; padding: 8px; }
+        .ld-right { position: absolute; top: 24px; right: 0; width: 80px; bottom: 0; background: #f0f2f8; padding: 8px 4px; display: flex; flex-direction: column; gap: 4px; }
+        .ld-region { border-radius: 4px; font-size: 8px; color: #2d4aa0; display: flex; align-items: center; justify-content: center; text-align: center; padding: 2px; background: #dfe8fc; border: 1px dashed #9bb5ed; }
+        .ld-primary { background: #a8c0f5; color: white; border-color: #6b8de8; }
+        .ld-soft { background: #f0f3fa; color: #6b7280; }
+        .module-list { flex: 1; }
+        .module-list h4 { font-size: 14px; color: #444; margin-bottom: 10px; }
+        .module-item { display: flex; align-items: flex-start; gap: 8px; padding: 7px 0; border-bottom: 1px solid #f5f5f5; }
+        .module-item:last-child { border-bottom: none; }
+        .module-dot { width: 6px; height: 6px; border-radius: 50%; background: #4E6EF2; margin-top: 7px; flex: 0 0 auto; }
+        .module-name { font-size: 13px; font-weight: 600; min-width: 96px; }
+        .module-desc { font-size: 12px; color: #888; flex: 1; }
+        .scenario-section { margin-bottom: 60px; }
+        .scenario-table { width: 100%; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+        .scenario-table thead { background: #4E6EF2; color: white; }
+        .scenario-table th { padding: 14px 16px; font-size: 14px; font-weight: 500; text-align: left; }
+        .scenario-table td { padding: 12px 16px; font-size: 14px; border-bottom: 1px solid #f0f0f0; }
+        .scenario-table tr:last-child td { border-bottom: none; }
+        .framework-tag { display: inline-block; padding: 3px 10px; border-radius: 4px; font-size: 12px; font-weight: 500; background: #e8f0fe; color: #1a73e8; }
+        .note-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 40px; }
+        .note-card { background: #fff; border-radius: 14px; padding: 22px 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+        .note-card h3 { font-size: 16px; margin-bottom: 10px; }
+        .note-card ul { color: #666; font-size: 14px; padding-left: 18px; }
+        .scene-group { background: #fff; border-radius: 18px; padding: 24px; margin-bottom: 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+        .scene-group-header { display: flex; align-items: flex-start; gap: 14px; margin-bottom: 18px; }
+        .scene-group-header h3 { font-size: 20px; margin-bottom: 4px; }
+        .scene-group-header p { color: #666; font-size: 14px; }
+        .scene-group-structure { display: grid; grid-template-columns: 112px 1fr; gap: 12px; padding: 12px; margin-bottom: 18px; background: #fafbff; border: 1px solid #eef0f5; border-radius: 12px; align-items: stretch; max-width: 460px; }
+        .scene-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 18px; }
+        .scene-card { border: 1px solid #eef0f5; border-radius: 14px; overflow: hidden; background: #fafbff; }
+        .mini-diagram { height: 78px; border: 1px solid #dfe6f2; border-radius: 8px; background: #f7f9fd; padding: 6px; display: grid; gap: 5px; }
+        .mini-block { border-radius: 4px; background: #dfe8fc; border: 1px dashed #9bb5ed; }
+        .mini-primary { background: #8eadf2; border-color: #6b8de8; }
+        .mini-soft { background: #eef2f8; border-color: #d8deea; }
+        .mini-f1 { grid-template-columns: 1fr 42px; }
+        .mini-f1 > div { display: grid; gap: 4px; }
+        .mini-f2 { grid-template-rows: 16px 1fr; }
+        .mini-f3 { grid-template-rows: 16px 1fr; }
+        .mini-f3 .mini-master-detail { display: grid; grid-template-columns: 42% 1fr; gap: 5px; }
+        .mini-f4 { grid-template-columns: 1fr 42px; }
+        .mini-f4 .mini-main { display: grid; grid-template-rows: 16px 1fr; gap: 5px; }
+        .mini-f4 .mini-rail { display: grid; gap: 5px; }
+        .mini-f5 { grid-template-rows: 22px 1fr 18px; }
+        .structure-copy { display: flex; flex-direction: column; justify-content: center; }
+        .structure-copy strong { font-size: 13px; color: #2d4aa0; margin-bottom: 4px; }
+        .structure-copy span { font-size: 12px; color: #6b7280; line-height: 1.45; }
+        .scene-shot { display: block; width: 100%; height: 180px; object-fit: cover; object-position: top left; background: #eef2fb; border-bottom: 1px solid #eef0f5; }
+        .scene-info { padding: 14px 16px 16px; }
+        .scene-info h4 { font-size: 15px; margin-bottom: 6px; }
+        .scene-info p { color: #666; font-size: 13px; }
+        .page-footer { text-align: center; padding: 40px; color: #999; font-size: 13px; }
+        @media (max-width: 1200px) { .overview-grid { grid-template-columns: repeat(3, 1fr); } .framework-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 768px) { .overview-grid, .note-grid { grid-template-columns: 1fr; } .framework-card-body { flex-direction: column; } .layout-diagram { width: 100%; min-width: unset; } .scenario-table { display: block; overflow-x: auto; } }
+    </style>
+</head>
+<body>
+<div class="page-header">
+    <h1>百家号设计框架体系</h1>
+    <p>基于16张参考图重新分析：框架定义区域关系，不定义具体内容；首页和个人中心按同样的右侧内容区双列结构统一为一个框架。</p>
+    <div class="stats">
+        <div class="stat-item"><div class="stat-num">5</div><div class="stat-label">框架类型</div></div>
+        <div class="stat-item"><div class="stat-num">16</div><div class="stat-label">页面场景</div></div>
+        <div class="stat-item"><div class="stat-num">3</div><div class="stat-label">关系层级</div></div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="principle-box">
+        <h3>颗粒度调整原则</h3>
+        <p>框架只描述主工作区、辅助栏、对象集合、对象处理区、叙事流等稳定关系；指标卡片、图表、列表、空状态、课程卡、商品榜单、设置项等只属于内容或组件实现，不作为框架分类依据。</p>
+    </div>
+
+    <h2 class="section-title">框架类型总览</h2>
+    <p class="section-desc">所有页面共享顶部导航和左侧导航。以下5类只描述主内容区内的稳定区域关系。</p>
+    <div class="overview-grid">
+        <div class="overview-item"><span class="ov-badge">F1</span><h4>双列聚合框架</h4><p>左主内容列+右辅助内容列</p><div class="ov-count">2场景</div></div>
+        <div class="overview-item"><span class="ov-badge">F2</span><h4>单工作区框架</h4><p>单一主容器，内部可承载不同任务</p><div class="ov-count">7场景</div></div>
+        <div class="overview-item"><span class="ov-badge">F3</span><h4>主从处理框架</h4><p>左对象集合+右对象处理</p><div class="ov-count">1场景</div></div>
+        <div class="overview-item"><span class="ov-badge">F4</span><h4>发现浏览框架</h4><p>资源浏览区+上下文辅助栏</p><div class="ov-count">4场景</div></div>
+        <div class="overview-item"><span class="ov-badge">F5</span><h4>叙事转化框架</h4><p>引导+说明+转化的纵向流</p><div class="ov-count">2场景</div></div>
+    </div>
+
+    <h2 class="section-title">框架结构详解</h2>
+    <p class="section-desc">以下内容只说明区域关系、主次规则和适用边界，不把具体业务内容写成框架模块。</p>
+    <div class="framework-grid">
+        <div class="framework-card">
+            <div class="framework-card-header"><span class="framework-badge">F1</span><h3>双列聚合框架</h3><span class="usage-count">2个场景</span></div>
+            <div class="framework-card-body">
+                <div class="layout-diagram"><div class="ld-header">Header Bar</div><div class="ld-sidebar"><div class="ld-dot"></div><div class="ld-dot"></div><div class="ld-dot"></div><div class="ld-dot"></div></div><div class="ld-main" style="right:0;display:grid;grid-template-columns:1fr 88px;gap:8px;"><div style="display:grid;grid-template-rows:34px 1fr 1fr;gap:6px;"><div class="ld-region ld-primary">Primary Column</div><div class="ld-region">Stacked Section</div><div class="ld-region">Stacked Section</div></div><div style="display:grid;grid-template-rows:1fr 1fr 1fr;gap:6px;"><div class="ld-region ld-soft">Auxiliary</div><div class="ld-region ld-soft">Auxiliary</div><div class="ld-region ld-soft">Auxiliary</div></div></div></div>
+                <div class="module-list"><h4>结构关系</h4><div class="module-item"><span class="module-dot"></span><span class="module-name">左主内容列</span><span class="module-desc">宽度更大，承载主要任务、配置或状态聚合。</span></div><div class="module-item"><span class="module-dot"></span><span class="module-name">右辅助内容列</span><span class="module-desc">宽度较小，承载状态、资产、权益、推荐或快捷行动。</span></div><div class="module-item"><span class="module-dot"></span><span class="module-name">纵向分组区</span><span class="module-desc">两列内部都可按主题纵向堆叠。</span></div><div class="module-item"><span class="module-dot"></span><span class="module-name">边界</span><span class="module-desc">不定义打卡、设置项、资产卡等具体内容。</span></div></div>
+            </div>
+        </div>
+        <div class="framework-card">
+            <div class="framework-card-header"><span class="framework-badge">F2</span><h3>单工作区框架</h3><span class="usage-count">7个场景</span></div>
+            <div class="framework-card-body">
+                <div class="layout-diagram"><div class="ld-header">Header Bar</div><div class="ld-sidebar"><div class="ld-dot"></div><div class="ld-dot"></div><div class="ld-dot"></div><div class="ld-dot"></div></div><div class="ld-main" style="display:grid;grid-template-rows:28px 1fr;gap:8px;"><div class="ld-region ld-soft">Local Controls</div><div class="ld-region ld-primary">Workspace</div></div></div>
+                <div class="module-list"><h4>结构关系</h4><div class="module-item"><span class="module-dot"></span><span class="module-name">局部控制区</span><span class="module-desc">分类、筛选、时间、搜索、状态切换等控制关系。</span></div><div class="module-item"><span class="module-dot"></span><span class="module-name">主工作区</span><span class="module-desc">单一主导容器，承载数据探索、对象管理、配置或成长任务。</span></div><div class="module-item"><span class="module-dot"></span><span class="module-name">反馈状态</span><span class="module-desc">空状态或数据不足时仍属于工作区状态。</span></div><div class="module-item"><span class="module-dot"></span><span class="module-name">边界</span><span class="module-desc">不因图表、列表、设置项、矩阵不同拆分框架。</span></div></div>
+            </div>
+        </div>
+        <div class="framework-card">
+            <div class="framework-card-header"><span class="framework-badge">F3</span><h3>主从处理框架</h3><span class="usage-count">1个场景</span></div>
+            <div class="framework-card-body">
+                <div class="layout-diagram"><div class="ld-header">Header Bar</div><div class="ld-sidebar"><div class="ld-dot"></div><div class="ld-dot"></div><div class="ld-dot"></div><div class="ld-dot"></div></div><div class="ld-main" style="display:grid;grid-template-rows:28px 1fr;gap:8px;"><div class="ld-region ld-soft">Controls</div><div style="display:grid;grid-template-columns:42% 1fr;gap:6px;"><div class="ld-region">Master</div><div class="ld-region ld-primary">Detail</div></div></div></div>
+                <div class="module-list"><h4>结构关系</h4><div class="module-item"><span class="module-dot"></span><span class="module-name">对象集合区</span><span class="module-desc">稳定宽度，用于定位和切换对象。</span></div><div class="module-item"><span class="module-dot"></span><span class="module-name">对象处理区</span><span class="module-desc">面积更大，承载当前对象详情与处理动作。</span></div><div class="module-item"><span class="module-dot"></span><span class="module-name">驱动关系</span><span class="module-desc">左侧选择驱动右侧变化。</span></div><div class="module-item"><span class="module-dot"></span><span class="module-name">边界</span><span class="module-desc">不定义评论列表、回复框、点赞按钮等组件。</span></div></div>
+            </div>
+        </div>
+        <div class="framework-card">
+            <div class="framework-card-header"><span class="framework-badge">F4</span><h3>发现浏览框架</h3><span class="usage-count">4个场景</span></div>
+            <div class="framework-card-body">
+                <div class="layout-diagram"><div class="ld-header">Header Bar</div><div class="ld-sidebar"><div class="ld-dot"></div><div class="ld-dot"></div><div class="ld-dot"></div><div class="ld-dot"></div></div><div class="ld-main" style="right:80px;display:grid;grid-template-rows:28px 1fr;gap:8px;"><div class="ld-region ld-soft">Local Navigation</div><div class="ld-region ld-primary">Discovery Workspace</div></div><div class="ld-right"><div class="ld-region ld-soft" style="height:44px;">Context</div><div class="ld-region ld-soft" style="height:44px;">Context</div><div class="ld-region ld-soft" style="flex:1;">Context</div></div></div>
+                <div class="module-list"><h4>结构关系</h4><div class="module-item"><span class="module-dot"></span><span class="module-name">资源浏览区</span><span class="module-desc">浏览、选择、参与资源的主区域。</span></div><div class="module-item"><span class="module-dot"></span><span class="module-name">上下文辅助栏</span><span class="module-desc">承载任务、记录、排行、推荐或管理提示。</span></div><div class="module-item"><span class="module-dot"></span><span class="module-name">局部导航区</span><span class="module-desc">切换资源类别或业务子域。</span></div><div class="module-item"><span class="module-dot"></span><span class="module-name">边界</span><span class="module-desc">不定义课程卡、商品榜单、任务卡、搜索热词。</span></div></div>
+            </div>
+        </div>
+        <div class="framework-card">
+            <div class="framework-card-header"><span class="framework-badge">F5</span><h3>叙事转化框架</h3><span class="usage-count">2个场景</span></div>
+            <div class="framework-card-body">
+                <div class="layout-diagram"><div class="ld-header">Header Bar</div><div class="ld-sidebar"><div class="ld-dot"></div><div class="ld-dot"></div><div class="ld-dot"></div><div class="ld-dot"></div></div><div class="ld-main" style="display:grid;grid-template-rows:56px 1fr 38px;gap:8px;"><div class="ld-region ld-primary">Hero</div><div class="ld-region">Narrative Sections</div><div class="ld-region ld-soft">Conversion Area</div></div></div>
+                <div class="module-list"><h4>结构关系</h4><div class="module-item"><span class="module-dot"></span><span class="module-name">引导区</span><span class="module-desc">建立主题、价值主张和用户预期。</span></div><div class="module-item"><span class="module-dot"></span><span class="module-name">说明区</span><span class="module-desc">按阅读顺序解释机制、权益、亮点或案例。</span></div><div class="module-item"><span class="module-dot"></span><span class="module-name">转化区</span><span class="module-desc">收束路径，引导开通、申请、同意或下一步。</span></div><div class="module-item"><span class="module-dot"></span><span class="module-name">边界</span><span class="module-desc">不定义产品亮点、案例、协议勾选等内容。</span></div></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="scenario-section">
+        <h2 class="section-title">场景-框架对应关系</h2>
+        <p class="section-desc">按框架分组展示具体结构关系和对应页面图，便于一眼判断页面归属。</p>
+
+        <div class="scene-group">
+            <div class="scene-group-header"><span class="framework-badge">F1</span><div><h3>双列聚合框架</h3><p>左主内容列 + 右辅助内容列；两列均可纵向堆叠分组。</p></div></div>
+            <div class="scene-group-structure"><div class="mini-diagram mini-f1"><div><div class="mini-block mini-primary"></div><div class="mini-block"></div><div class="mini-block"></div></div><div><div class="mini-block mini-soft"></div><div class="mini-block mini-soft"></div><div class="mini-block mini-soft"></div></div></div><div class="structure-copy"><strong>双列聚合结构</strong><span>左主内容列 + 右辅助内容列，两列纵向堆叠。</span></div></div>
+            <div class="scene-grid">
+                <div class="scene-card"><img class="scene-shot" src="百家号框架参考图/首页.png" alt="首页"><div class="scene-info"><h4>创作者聚合工作台</h4><p>首页左列承担创作、数据、互动和任务聚合，右列承担打卡、收入、快捷导航等辅助行动。</p></div></div>
+                <div class="scene-card"><img class="scene-shot" src="百家号框架参考图/个人中心.png" alt="个人中心"><div class="scene-info"><h4>账号配置聚合页</h4><p>个人中心左列承担账号信息和配置分组，右列承担安全、资产、权益和优化建议。</p></div></div>
+            </div>
+        </div>
+
+        <div class="scene-group">
+            <div class="scene-group-header"><span class="framework-badge">F2</span><div><h3>单工作区框架</h3><p>局部控制区 + 单一主工作区；数据、列表、设置、成长信息只是工作区内部内容。</p></div></div>
+            <div class="scene-group-structure"><div class="mini-diagram mini-f2"><div class="mini-block mini-soft"></div><div class="mini-block mini-primary"></div></div><div class="structure-copy"><strong>单工作区结构</strong><span>局部控制区服务一个主工作区。</span></div></div>
+            <div class="scene-grid">
+                <div class="scene-card"><img class="scene-shot" src="百家号框架参考图/内容分析.png" alt="内容分析"><div class="scene-info"><h4>内容数据探索</h4><p>围绕内容数据进行单一工作区探索。</p></div></div>
+                <div class="scene-card"><img class="scene-shot" src="百家号框架参考图/号主页分析.png" alt="号主页分析"><div class="scene-info"><h4>主页数据探索</h4><p>围绕主页访问数据进行单一工作区分析。</p></div></div>
+                <div class="scene-card"><img class="scene-shot" src="百家号框架参考图/收入中心.png" alt="收入中心"><div class="scene-info"><h4>收益数据管理</h4><p>围绕收益概览、分布和趋势形成数据工作区。</p></div></div>
+                <div class="scene-card"><img class="scene-shot" src="百家号框架参考图/作品管理.png" alt="作品管理"><div class="scene-info"><h4>作品对象管理</h4><p>围绕作品对象集合进行筛选、查看和管理。</p></div></div>
+                <div class="scene-card"><img class="scene-shot" src="百家号框架参考图/素材管理.png" alt="素材管理"><div class="scene-info"><h4>素材对象管理</h4><p>空状态仍属于对象管理工作区的状态表达。</p></div></div>
+                <div class="scene-card"><img class="scene-shot" src="百家号框架参考图/话题管理.png" alt="话题管理"><div class="scene-info"><h4>话题对象管理</h4><p>筛选、搜索和空状态共同服务同一对象工作区。</p></div></div>
+                <div class="scene-card"><img class="scene-shot" src="百家号框架参考图/成长权益.png" alt="成长权益"><div class="scene-info"><h4>成长路径工作区</h4><p>等级、权益、成长坐标属于同一成长任务工作区。</p></div></div>
+            </div>
+        </div>
+
+        <div class="scene-group">
+            <div class="scene-group-header"><span class="framework-badge">F3</span><div><h3>主从处理框架</h3><p>对象集合区 + 对象处理区；左侧选择驱动右侧处理。</p></div></div>
+            <div class="scene-group-structure"><div class="mini-diagram mini-f3"><div class="mini-block mini-soft"></div><div class="mini-master-detail"><div class="mini-block"></div><div class="mini-block mini-primary"></div></div></div><div class="structure-copy"><strong>主从处理结构</strong><span>左侧对象集合驱动右侧对象处理区。</span></div></div>
+            <div class="scene-grid">
+                <div class="scene-card"><img class="scene-shot" src="百家号框架参考图/评论管理.png" alt="评论管理"><div class="scene-info"><h4>互动对象处理</h4><p>左侧评论集合定位对象，右侧详情区处理当前对象。</p></div></div>
+            </div>
+        </div>
+
+        <div class="scene-group">
+            <div class="scene-group-header"><span class="framework-badge">F4</span><div><h3>发现浏览框架</h3><p>资源浏览区 + 上下文辅助栏；资源内容可变化，但浏览与辅助关系稳定。</p></div></div>
+            <div class="scene-group-structure"><div class="mini-diagram mini-f4"><div class="mini-main"><div class="mini-block mini-soft"></div><div class="mini-block mini-primary"></div></div><div class="mini-rail"><div class="mini-block mini-soft"></div><div class="mini-block mini-soft"></div><div class="mini-block mini-soft"></div></div></div><div class="structure-copy"><strong>发现浏览结构</strong><span>主资源浏览区 + 右侧上下文辅助栏。</span></div></div>
+            <div class="scene-grid">
+                <div class="scene-card"><img class="scene-shot" src="百家号框架参考图/搜索话题.png" alt="搜索话题"><div class="scene-info"><h4>话题资源发现</h4><p>通过筛选和搜索发现可参与话题。</p></div></div>
+                <div class="scene-card"><img class="scene-shot" src="百家号框架参考图/学习中心.png" alt="学习中心"><div class="scene-info"><h4>学习资源发现</h4><p>主区浏览学习资源，右侧承载学习记录等辅助。</p></div></div>
+                <div class="scene-card"><img class="scene-shot" src="百家号框架参考图/度星选商单.png" alt="度星选商单"><div class="scene-info"><h4>商单资源发现</h4><p>主区发现任务资源，右侧承载管理、学习和榜单辅助。</p></div></div>
+                <div class="scene-card"><img class="scene-shot" src="百家号框架参考图/电商带货.png" alt="电商带货"><div class="scene-info"><h4>商品资源发现</h4><p>主区浏览商品和热词资源，右侧承载任务与活动辅助。</p></div></div>
+            </div>
+        </div>
+
+        <div class="scene-group">
+            <div class="scene-group-header"><span class="framework-badge">F5</span><div><h3>叙事转化框架</h3><p>引导区 + 说明区 + 转化区；页面按阅读和说服路径纵向展开。</p></div></div>
+            <div class="scene-group-structure"><div class="mini-diagram mini-f5"><div class="mini-block mini-primary"></div><div class="mini-block"></div><div class="mini-block mini-soft"></div></div><div class="structure-copy"><strong>叙事转化结构</strong><span>引导区 + 说明区 + 转化区纵向展开。</span></div></div>
+            <div class="scene-grid">
+                <div class="scene-card"><img class="scene-shot" src="百家号框架参考图/内容分销.png" alt="内容分销"><div class="scene-info"><h4>分销产品转化</h4><p>先建立价值主张，再说明亮点和案例，最终导向开通。</p></div></div>
+                <div class="scene-card"><img class="scene-shot" src="百家号框架参考图/百享计划.png" alt="百享计划"><div class="scene-info"><h4>计划产品转化</h4><p>以产品介绍、机制说明和开通转化构成线性叙事流。</p></div></div>
+            </div>
+        </div>
+    </div>
+
+    <h2 class="section-title">框架边界说明</h2>
+    <div class="note-grid">
+        <div class="note-card"><h3>不进入框架定义</h3><ul><li>指标卡片、图表、表格、列表、按钮、输入框。</li><li>课程卡、商品榜单、任务卡、收益卡、设置项。</li><li>空状态插图、具体文案、运营入口和业务数据。</li></ul></div>
+        <div class="note-card"><h3>判断顺序</h3><ul><li>先判断区域关系：单区、主从、右侧辅助、叙事流。</li><li>再判断场景映射：管理、探索、发现、转化。</li><li>最后在页面实现中选择具体组件和内容。</li></ul></div>
+    </div>
+</div>
+<div class="page-footer"><p>百家号设计框架体系 v2.0 | 基于16张参考图重新收敛 | 2026.06.05</p></div>
+</body>
+</html>
